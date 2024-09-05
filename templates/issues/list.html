@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Posts{% endblock title %}
+
+{% block content %}
+<div class="post_container">
+    <h1>Issues</h1>
+    {% for post in issue_list %}
+    <div class="card">
+        <div class="card-body">
+        <h5 class="card-title">{{ post.title }}</h5>
+        <p class="card-text">{{ post.body|truncatechars:124 }}</p>
+        <a href="{% url 'detail' post.id %}" class="card-link">Continue Reading...</a>
+        <a href="{% url 'edit' post.id %}" class="card-link">Edit</a>
+        {% if user.is_authenticated %}
+            {% if user == post.author %}
+                <form method="POST" action="{% url 'update_to_draft' post.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" id="id_status" name= "status" value= "2">
+                    <input type="submit" class="card-link btn btn-primary" value="Draft">
+                </form>
+            {% endif %}
+        {% endif %}
+        </div>
+    </div>
+    <br />
+</div>
+
+
+{% endfor %}
+{% endblock content %}
